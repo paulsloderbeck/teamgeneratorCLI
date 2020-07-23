@@ -9,6 +9,79 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { get } = require("https");
+let employees = [];
+
+function getTeamType() {
+    inquirer.prompt([
+        {
+            type: "confirm",
+            message: "Does your team include Engineers?",
+            name: "engineerBoolean"
+        },
+        {
+            type: "confirm",
+            message: "Does your team include Managers?",
+            name: "managerBoolean"
+        },
+        {
+            type: "confirm",
+            message: "Does your team include interns?",
+            name: "internBoolean"
+        }
+    ])
+        .then(answers => {
+            console.log(answers)
+            //start engineer prompt, then manager, then intern
+        })
+}
+
+function getEngineerInput() {
+    const questions = [
+        {
+            type: "input",
+            message: "What is the engineers's name?",
+            name: "name"
+        },
+        {
+            type: "input",
+            message: "What is the engineers's id?",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is the engineers's email?",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "What is the engineer's github?",
+            name: "github"
+        },
+        {
+            type: "confirm",
+            message: "Would you like to add another Engineer?",
+            name: "askAgain"
+        }
+    ]
+    function ask() {
+        inquirer.prompt(questions)
+            .then(answer => {
+                //create Engineer object, push to employees
+                let newEngineer = new Engineer(answer.name, answer.id, answer.email, answer.github);
+                employees.push(newEngineer);
+                if (answer.askAgain) {
+                    ask();
+                } else {
+                    console.log(employees);
+                    return
+                }
+            });
+    }
+    ask();
+}
+//getTeamType();
+getEngineerInput();
 
 
 // Write code to use inquirer to gather information about the development team members,
