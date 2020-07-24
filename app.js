@@ -12,55 +12,90 @@ const render = require("./lib/htmlRenderer");
 const { get } = require("https");
 let employees = [];
 
-function getTeamType() {
+async function init() {
+    await getManagerInput();
+
+}
+
+function askTeam() {
     inquirer.prompt([
         {
-            type: "confirm",
-            message: "Does your team include Engineers?",
-            name: "engineerBoolean"
-        },
-        {
-            type: "confirm",
-            message: "Does your team include Managers?",
-            name: "managerBoolean"
-        },
-        {
-            type: "confirm",
-            message: "Does your team include interns?",
-            name: "internBoolean"
+            type: "list",
+            message: "Please select a type of team member.",
+            name: "type",
+            choices: [
+                "Engineer",
+                "Intern"
+            ]
         }
     ])
-        .then(answers => {
-            console.log(answers)
-            //start engineer prompt, then manager, then intern
+        .then(async function (answer) {
+            if (answer.type === "Engineer") {
+                await getEngineerInput();
+            } if (answer.type === "Intern") {
+                await getInternInput();
+            }
         })
+}
+
+function getManagerInput() {
+    const questions = [
+        {
+            type: "input",
+            message: "What is the Manager's name?",
+            name: "name"
+        },
+        {
+            type: "input",
+            message: "What is the Manager's id?",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is the Manager's email?",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "What is the Manager's office number?",
+            name: "officeNumber"
+        },
+
+    ]
+    inquirer.prompt(questions)
+        .then(answer => {
+            //create Manager object, push to employees
+            let newManager = new Manager(answer.name, answer.id, answer.email, answer.officeNumber);
+            employees.push(newManager);
+            askTeam();
+        });
 }
 
 function getEngineerInput() {
     const questions = [
         {
             type: "input",
-            message: "What is the engineers's name?",
+            message: "What is the Engineer's name?",
             name: "name"
         },
         {
             type: "input",
-            message: "What is the engineers's id?",
+            message: "What is the Engineer's id?",
             name: "id"
         },
         {
             type: "input",
-            message: "What is the engineers's email?",
+            message: "What is the Engineer's email?",
             name: "email"
         },
         {
             type: "input",
-            message: "What is the engineer's github?",
+            message: "What is the Engineer's github?",
             name: "github"
         },
         {
             type: "confirm",
-            message: "Would you like to add another Engineer?",
+            message: "Would you like to add another Employee?",
             name: "askAgain"
         }
     ]
@@ -71,17 +106,68 @@ function getEngineerInput() {
                 let newEngineer = new Engineer(answer.name, answer.id, answer.email, answer.github);
                 employees.push(newEngineer);
                 if (answer.askAgain) {
-                    ask();
+                    askTeam();
                 } else {
                     console.log(employees);
+                    let HTML = render(employees);
+                    console.log(HTML);
                     return
                 }
             });
     }
     ask();
 }
-//getTeamType();
-getEngineerInput();
+
+
+function getInternInput() {
+    const questions = [
+        {
+            type: "input",
+            message: "What is the Intern's name?",
+            name: "name"
+        },
+        {
+            type: "input",
+            message: "What is the Intern's id?",
+            name: "id"
+        },
+        {
+            type: "input",
+            message: "What is the Intern's email?",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "What is the Intern's school?",
+            name: "school"
+        },
+        {
+            type: "confirm",
+            message: "Would you like to add another Employee?",
+            name: "askAgain"
+        }
+    ]
+    function ask() {
+        inquirer.prompt(questions)
+            .then(answer => {
+                //create Intern object, push to employees
+                let newIntern = new Intern(answer.name, answer.id, answer.email, answer.school);
+                employees.push(newIntern);
+                if (answer.askAgain) {
+                    askTeam();
+                } else {
+                    console.log(employees);
+                    let HTML = render(employees);
+                    console.log(HTML);
+                    return
+                }
+            });
+    }
+    ask();
+}
+init();
+//getEngineerInput();
+
 
 
 // Write code to use inquirer to gather information about the development team members,
