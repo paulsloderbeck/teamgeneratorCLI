@@ -4,9 +4,11 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
+const writeFileAsync = util.promisify(fs.writeFile);
 
 const render = require("./lib/htmlRenderer");
 const { get } = require("https");
@@ -108,9 +110,8 @@ function getEngineerInput() {
                 if (answer.askAgain) {
                     askTeam();
                 } else {
-                    console.log(employees);
                     let HTML = render(employees);
-                    console.log(HTML);
+                    writeFileAsync(outputPath, HTML);
                     return
                 }
             });
@@ -156,9 +157,8 @@ function getInternInput() {
                 if (answer.askAgain) {
                     askTeam();
                 } else {
-                    console.log(employees);
                     let HTML = render(employees);
-                    console.log(HTML);
+                    writeFileAsync(outputPath, HTML);
                     return
                 }
             });
@@ -166,7 +166,7 @@ function getInternInput() {
     ask();
 }
 init();
-//getEngineerInput();
+
 
 
 
