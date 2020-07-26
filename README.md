@@ -1,4 +1,4 @@
 # teamgeneratorCLI
 This is a CLI application that uses inquirer to build a team based on user input. The Emmployee class builds the basic employee JSON object, using extended classes for engineer, intern, and manager. The app.js function uses recursion to prompt the user to first add a manager and then ask if they would like to add additional team members after each employee is added. Once the user says no, the HTML renderer function is called to build the HTML, passing in the employees array of JSON objects into the HTML to build the team's website.
 
-![screenshot]([./screenshot.png](https://github.com/paulsloderbeck/teamgeneratorCLI/blob/master/screenshot.png))
+![screenshot](https://github.com/paulsloderbeck/teamgeneratorCLI/blob/master/screenshot.png)
